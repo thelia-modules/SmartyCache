@@ -72,6 +72,7 @@ class Cache extends AbstractSmartyPlugin
      * @param $content
      * @param $template
      * @param $repeat
+     * @return false|string|null
      */
     public function cacheBlock($params, $content, $template, &$repeat)
     {
@@ -100,16 +101,20 @@ class Cache extends AbstractSmartyPlugin
         if (null === $this->cacheDriver) {
             $this->cacheDriver = new FilesystemCache($this->getCacheDir());
 
-            $customer = $this->request->getSession()->getCustomerUser();
-            $admin = $this->request->getSession()->getAdminUser();
+            $session = $this->request->getSession();
 
-            $this->defaultParams = [
-                'lang' => $this->request->getSession()->getLang(true)->getId(),
-                'currency' => $this->request->getSession()->getCurrency(true)->getId(),
-                'customer' => null !== $customer ? $customer->getId() : '0',
-                'admin' => null !== $admin ? $admin->getId() : '0',
-                'role' => sprintf('%s%s', null !== $admin ? 'ADMIN' : '', null !== $customer ? 'CUSTOMER' : '')
-            ];
+            if (null !== $session) {
+                $customer = $session->getCustomerUser();
+                $admin = $session->getAdminUser();
+
+                $this->defaultParams = [
+                    'lang' => $session->getLang(true)->getId(),
+                    'currency' => $session->getCurrency(true)->getId(),
+                    'customer' => null !== $customer ? $customer->getId() : '0',
+                    'admin' => null !== $admin ? $admin->getId() : '0',
+                    'role' => sprintf('%s%s', null !== $admin ? 'ADMIN' : '', null !== $customer ? 'CUSTOMER' : '')
+                ];
+            }
         }
 
         $cacheKey = $this->generateKey($params);
