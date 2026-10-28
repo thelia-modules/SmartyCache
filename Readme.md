@@ -1,5 +1,8 @@
 # SmartyCache
 
+> This module is no longer maintained and will not be ported to Thelia 3. Its 2.x versions remain available on Packagist.
+> Thelia 3 no longer renders pages with Smarty, so there is nothing left to cache.
+
 A simple module to cache some parts of a template. It uses a smarty function.
 
 ## Usage
